@@ -1,0 +1,12 @@
+Development tasklist for analbot:
+
+- Summon by invite
+- User whitelist, blacklist
+- Format whitelist, blacklist
+- Extract team data from replay
+- Extract "top heavy" Pokémon from replays, used for formats with teams larger than max battler count
+- Group last two together
+- Cache data
+- Add force refresh command
+- Funny messages
+- Add banish command
