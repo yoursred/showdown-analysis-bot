@@ -1,6 +1,6 @@
 Development tasklist for analbot:
 
-- Summon by invite
+√ Summon by invite
 - User whitelist, blacklist
 - Format whitelist, blacklist
 - Extract team data from replay
