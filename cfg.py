@@ -13,3 +13,5 @@ format_wl = [
 format_bl = [
 
 ]
+
+command_prefix = '.'
