@@ -1,5 +1,9 @@
 import PySimpleGUI as sg
-from team_extractor import  get_team_from_replays, team2str
+
+from team_extractor import get_team_from_replays, team2str
+
+# TODO: replace PySimpleGUI with PySimpleGUIwx
+# TODO: flesh out the GUI, figure out what to add
 
 sg.theme('System Default 1')
 
@@ -20,7 +24,7 @@ layout = [
     ],
     [
         sg.T('Required:'),
-        sg.InputText(key='pokes', size=20),
+        sg.InputText(key='required_pokes', size=20),
         sg.T('Format:'),
         sg.Combo(formats, key='format')
     ],
@@ -39,7 +43,7 @@ while True:
             v['username'],
             v['format'],
             c=v['depth'],
-            pokes=v['pokes'].split(';') if v['pokes'] else None
+            required_pokes=v['required_pokes'].split(';') if v['required_pokes'] else None
         )
 
         team = team2str(team)

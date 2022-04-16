@@ -61,6 +61,4 @@ async def handle_msg(msg: showdown.ChatMessage, ctx: showdown.Client):
 
     cmd, args = split_command(pre, cmds[cmd]['format'], cmds[cmd].get('fallback'), cmds[cmd].get('token_parser'))
 
-    print(cmd, args)
-
     await cmds[cmd]['function'](args, ctx, msg)

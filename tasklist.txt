@@ -7,12 +7,13 @@ Development tasklist for analbot:
 √ Extract "top-heavy" Pokémon from replays, used for formats with teams larger than max battler count
 √ Group last two together
 - Use the "top-heavy" data, somehow
-- Cache data
+~ Cache data
 - Add force refresh command
 - Funny messages
 √ Add banish command
-- Add user stalker
+√ Add user stalker
 - idk
 - Documentation
 - Logging
 - Web interface, idk
+- GUI

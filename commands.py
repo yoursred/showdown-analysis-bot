@@ -2,17 +2,17 @@
 Commands are stored here or something, idk
 """
 import showdown
-from showdown import ChatMessage
+# from showdown import ChatMessage
 
 from helpers import format_from_roomid
 from team_extractor import get_team_from_replays, team2str
 
 anal_format = [
-    {'user': str, 'pokes': str | list, 'depth': int, 'format': str},
-    {'user': str, 'pokes': str | list, 'depth': int},
-    {'user': str, 'depth': int, 'pokes': str | list},
+    {'user': str, 'required_pokes': str | list, 'depth': int, 'format': str},
+    {'user': str, 'required_pokes': str | list, 'depth': int},
+    {'user': str, 'depth': int, 'required_pokes': str | list},
     {'user': str, 'depth': int},
-    {'user': str, 'pokes': str | list},
+    {'user': str, 'required_pokes': str | list},
     {'user': str},
 ]
 
@@ -22,14 +22,14 @@ async def anal_cmd(args: dict, ctx: showdown.Client, msg: showdown.ChatMessage, 
 
     user = str(args['user'])
 
-    pokes = args.get('pokes', [])
+    pokes = args.get('required_pokes', [])
     pokes = [str(pokes)] if isinstance(pokes, int) else [pokes] if isinstance(pokes, str) and pokes != '' else []
 
     depth = int(args.get('depth', 5))
 
-    format_ = str(args.get('format', format_from_roomid(msg.room_id) if isinstance(msg, ChatMessage) else ''))
+    format_ = str(args.get('format', format_from_roomid(msg.room_id) if isinstance(msg, showdown.ChatMessage) else ''))
 
-    team, th, b = get_team_from_replays(user, format_, pokes=pokes, c=depth)
+    team, th, b = get_team_from_replays(user, format_, required_pokes=pokes, c=depth)
 
     paste = team2str(team).strip()
 

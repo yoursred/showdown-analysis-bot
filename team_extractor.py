@@ -3,6 +3,7 @@ from requests import get
 from showdown import utils
 import json
 
+# TODO: iron out all edge cases
 
 def get_last_replays(user, format_, c=5):
     user = utils.name_to_id(user)
@@ -14,7 +15,7 @@ def get_last_replays(user, format_, c=5):
         r = (
             replay['id'],
             replay['uploadtime'],
-            'p1' if utils.name_to_id(replay['p1']) == user else 'p2'
+            'p1' if utils.name_to_id(replay['p1']) == user else 'p2',
         )
         replay_ids.append(r)
 
@@ -44,7 +45,7 @@ def get_teams(replay_id):
                 # 'level': level,
                 'moves': set(),
                 'revealed': False
-                }
+            }
         if line.startswith('|poke|p2'):
             data = line.split('|')[3].split(', ')
             form = data[0]
@@ -57,7 +58,7 @@ def get_teams(replay_id):
                 'moves': set(),
                 'revealed': False
             }
-        if line.startswith('|switch|p1') or line.startswith('|drag|p1')  or line.startswith('|repalce|p1'):
+        if line.startswith('|switch|p1') or line.startswith('|drag|p1') or line.startswith('|repalce|p1'):
             nick = line.split('|')[2].split(': ')[1]
             form = line.split('|')[3].split(', ')[0]
             base_species = form.split('-')[0].lower()
@@ -147,9 +148,12 @@ def get_teams(replay_id):
     return p1_pokes, p2_pokes
 
 
-def get_team_from_replays(user, format_, c=5, t=1, pokes=None):
+def get_team_from_replays(user, format_, c=5, t=1, required_pokes=None, pokes=None):
+    if pokes is None:
+        pokes = []
+
     replays = get_last_replays(user, format_, c)
-    replays.sort(key=lambda x: x[1]) # sort from older to newer
+    replays.sort(key=lambda x: x[1])  # sort from oldest to newest
 
     team = {}
     battles = 0
@@ -162,8 +166,8 @@ def get_team_from_replays(user, format_, c=5, t=1, pokes=None):
             team_snippet = teams[0]
         else:
             team_snippet = teams[1]
-        if pokes:
-            b = all(map(lambda x: x in team_snippet, pokes))
+        if required_pokes:
+            b = all(map(lambda x: x in team_snippet, required_pokes))
         else:
             b = True
         if (len(set(team_snippet) - set(team)) < t or (not team)) and b:
@@ -181,20 +185,20 @@ def get_team_from_replays(user, format_, c=5, t=1, pokes=None):
                     else:
                         top_heavy[k] = 1
 
-    return team, {k: v/battles for k, v in top_heavy.items()}, battles
+    return team, {k: v / battles for k, v in top_heavy.items()}, battles
 
 
 def team2str(team):
     teamstr = ''
     for base_species, poke in team.items():
-        if poke.get('nick', base_species.capitalize()) == base_species.capitalize():
+        if (nick := poke.get('nick', base_species.capitalize())) == base_species.capitalize():
             teamstr += poke['form'] + ' '
         else:
             teamstr += f"{poke['nick']} ({poke['form']}) "
 
         teamstr += f"@ {poke.get('item', 'Unknown')}, "
         teamstr += f"Ability: {poke.get('ability', 'Unknown')}"
-        teamstr += f"\n {poke['nick']} moves: [ "
+        teamstr += f"\n {nick} moves: [ "
         for move in poke.get('moves', ()):
             teamstr += f"{move}, "
 

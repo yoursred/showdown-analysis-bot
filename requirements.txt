@@ -1,3 +1,4 @@
 showdownpy
 requests
 pysimplegui
+django
