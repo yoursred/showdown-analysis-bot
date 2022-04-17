@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 
-from team_extractor import get_team_from_replays, team2str
+from .team_extractor import get_team_from_replays, team2str
 
 # TODO: replace PySimpleGUI with PySimpleGUIwx
 # TODO: flesh out the GUI, figure out what to add
@@ -34,19 +34,21 @@ layout = [
 
 window = sg.Window('walhex', layout, font=('helvetica', 12))
 
-while True:
-    e, v = window.read()
-    if e == sg.WIN_CLOSED:  # if user closes window or clicks cancel
-        break
-    elif e == 'Find':
-        team, th, c = get_team_from_replays(
-            v['username'],
-            v['format'],
-            c=v['depth'],
-            required_pokes=v['required_pokes'].split(';') if v['required_pokes'] else None
-        )
 
-        team = team2str(team)
+def main(**kwargs):
+    while True:
+        e, v = window.read()
+        if e == sg.WIN_CLOSED:  # if user closes window or clicks cancel
+            break
+        elif e == 'Find':
+            team, th, c = get_team_from_replays(
+                v['username'],
+                v['format'],
+                c=v['depth'],
+                required_pokes=v['required_pokes'].split(';') if v['required_pokes'] else None
+            )
 
-        window['out'].update(team)
-    print(v)
+            team = team2str(team)
+
+            window['out'].update(team)
+        print(v)

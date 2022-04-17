@@ -1,0 +1,5 @@
+HELP_TEXT_MAIN = 'Pokemon Showdown Analysis Bot'
+HELP_TEXT_BOT = 'summonable bot'
+HELP_TEXT_CLI = 'command line interface to the bot'
+HELP_TEXT_STALK = 'battle/user stalker'
+HELP_TEXT_GUI = 'graphical user interface to the bot'

@@ -4,8 +4,8 @@ Commands are stored here or something, idk
 import showdown
 # from showdown import ChatMessage
 
-from helpers import format_from_roomid
-from team_extractor import get_team_from_replays, team2str
+from .helpers import format_from_roomid
+from .team_extractor import get_team_from_replays, team2str
 
 anal_format = [
     {'user': str, 'required_pokes': str | list, 'depth': int, 'format': str},

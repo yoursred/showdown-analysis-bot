@@ -3,8 +3,8 @@ This thing parses and handles commands
 """
 import showdown
 
-from commands import cmds
-from cfg import command_prefix
+from .commands import cmds
+from .cfg import command_prefix
 
 
 def split_command(
