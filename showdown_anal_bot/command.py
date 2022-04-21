@@ -23,6 +23,10 @@ async def handle_msg(msg: showdown.ChatMessage, ctx: showdown.Client):
             await ctx.say(msg.room_id, f'Command not found: {cmd}')
         return
 
-    cmd, args = split_command(pre, cmds[cmd]['format'], cmds[cmd].get('fallback'), cmds[cmd].get('token_parser'))
-
-    await cmds[cmd]['function'](args, ctx, msg)
+    cmd, args, matched = split_command(
+        pre, cmds[cmd]['format'], cmds[cmd].get('fallback'), cmds[cmd].get('token_parser')
+    )
+    if matched:
+        await cmds[cmd]['function'](args, ctx, msg)
+    else:
+        await ctx.say(msg.room_id, f'Syntax error! Correct syntax: {cmds[cmd]["syntax"]}')
