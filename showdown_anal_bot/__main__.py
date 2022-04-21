@@ -2,9 +2,12 @@ import argparse as ap
 
 from .bot import main as bot_main
 from .cli import main as cli_main
-from .gui import main as gui_main
+# from .gui import main as gui_main
 from .stalk import main as stalk_main
 from . import cfg
+
+
+gui_main = lambda *args, **kwargs: None  # WIP
 
 MAIN_FUNCTIONS = {
     'bot': bot_main,

@@ -1,4 +1,5 @@
 showdownpy
 requests
-pysimplegui
 django
+PySimpleGUI
+PySimpleGUIQt

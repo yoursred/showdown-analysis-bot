@@ -1,9 +1,19 @@
 """Parse replay and extract team and top heavy data from it"""
+import pathlib
+import gzip
+
 from requests import get
 from showdown import utils
-import json
+
+from .cfg import battle_log_location, cache_battle_logs
+
 
 # TODO: iron out all edge cases
+# TODO: add risk analysis
+
+
+last_ltm = {}
+
 
 def get_last_replays(user, format_, c=5):
     user = utils.name_to_id(user)
@@ -23,7 +33,18 @@ def get_last_replays(user, format_, c=5):
 
 
 def get_teams(replay_id):
-    replay = get(f'https://replay.pokemonshowdown.com/{replay_id}.log')
+    # This function parses a battle replay and gets all revealed info about the teams
+    if (battle_log_location / f'{replay_id}.gz').exists():
+        cached = True
+        with gzip.open(battle_log_location / f'{replay_id}.gz', 'rb') as f:
+            battle_log = f.read().decode('utf-8')
+    else:
+        cached = False
+        battle_log = get(f'https://replay.pokemonshowdown.com/{replay_id}.log').text
+
+    if cache_battle_logs and not cached:
+        with open(battle_log_location / (replay_id + '.gz'), 'wb') as f:
+            f.write(gzip.compress(battle_log.encode('utf-8')))
 
     p1 = ''
     p2 = ''
@@ -33,7 +54,7 @@ def get_teams(replay_id):
     p2_pokes = {}
     p2_nicks = {}
 
-    for line in replay.text.splitlines():
+    for line in battle_log.splitlines():
         if line.startswith('|poke|p1'):
             data = line.split('|')[3].split(', ')
             form = data[0]
@@ -149,6 +170,16 @@ def get_teams(replay_id):
 
 
 def get_team_from_replays(user, format_, c=5, t=1, required_pokes=None, pokes=None):
+    """
+    Get a team from replays. "top-heavy" here means pokemon that are used in the most
+    :param user:
+    :param format_:
+    :param c:
+    :param t:
+    :param required_pokes:
+    :param pokes:
+    :return:
+    """
     if pokes is None:
         pokes = []
 
@@ -157,12 +188,16 @@ def get_team_from_replays(user, format_, c=5, t=1, required_pokes=None, pokes=No
 
     team = {}
     battles = 0
+    useful_samples = 0
     top_heavy = {}
+    likely_team_mates = {}
+    global last_ltm
     teams = []
 
     for replay in replays:
-        teams = get_teams(replay[0])
-        if replay[2] == 'p1':
+        i = 0
+        teams = get_teams(replay[0])  # get both teams from replay id
+        if replay[2] == 'p1':  # get the team of the user we're after
             team_snippet = teams[0]
         else:
             team_snippet = teams[1]
@@ -180,15 +215,45 @@ def get_team_from_replays(user, format_, c=5, t=1, required_pokes=None, pokes=No
                 else:
                     team[k] = v
                 if v['revealed']:
+                    i += 1
                     if k in top_heavy:
                         top_heavy[k] += 1
                     else:
                         top_heavy[k] = 1
 
-    return team, {k: v / battles for k, v in top_heavy.items()}, battles
+                    for k_, v_ in team_snippet.items():
+                        if v_['revealed'] and k_ != k:
+                            if k in likely_team_mates:
+                                if k_ in likely_team_mates[k]:
+                                    likely_team_mates[k][k_] += 1
+                                else:
+                                    likely_team_mates[k][k_] = 1
+                            else:
+                                likely_team_mates[k] = {k_: 1}
+        if i > 3:
+            useful_samples += 1
+
+    last_ltm = likely_team_mates
+
+    return team, {k: v / battles for k, v in top_heavy.items()}, likely_team_mates, battles
 
 
-def team2str(team):
+def get_likely_back(lead_pokes):
+    # This does the same thing as top_heavy, but one level deeper.
+    l = {}
+    for p in lead_pokes:
+        for k, v in last_ltm.get(p, {}).items():
+            if k not in lead_pokes:
+                if k in l:
+                    l[k] += v
+                else:
+                    l[k] = v
+    return l
+
+
+def team2str(team, th, ltm):
+    print(th)
+    print(ltm)
     teamstr = ''
     for base_species, poke in team.items():
         if (nick := poke.get('nick', base_species.capitalize())) == base_species.capitalize():

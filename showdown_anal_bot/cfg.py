@@ -1,3 +1,5 @@
+import pathlib
+
 user_wl = [
 
 ]
@@ -18,7 +20,7 @@ login_file_path = "login.txt"
 
 command_prefix = '.'
 
-battle_log_location = './battles/'
+battle_log_location = pathlib.Path('./battles/')
 
 stalk_config = {
     'to_stalk': None,
@@ -33,3 +35,5 @@ stalk_config = {
 
 fake_username = 'fake_username'
 
+
+cache_battle_logs = True
