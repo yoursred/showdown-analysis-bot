@@ -20,7 +20,8 @@ login_file_path = "login.txt"
 
 command_prefix = '.'
 
-battle_log_location = pathlib.Path('./battles/')
+battle_log_location = pathlib.Path.cwd() / pathlib.Path('./battles/')  # TODO: make less ugly
+battle_log_location.mkdir(parents=True, exist_ok=True)
 
 stalk_config = {
     'to_stalk': None,

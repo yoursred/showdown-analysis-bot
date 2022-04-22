@@ -252,8 +252,6 @@ def get_likely_back(lead_pokes):
 
 
 def team2str(team, th, ltm):
-    print(th)
-    print(ltm)
     teamstr = ''
     for base_species, poke in team.items():
         if (nick := poke.get('nick', base_species.capitalize())) == base_species.capitalize():

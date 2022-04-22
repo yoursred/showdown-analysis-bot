@@ -1,7 +1,6 @@
 import PySimpleGUIQt as sg
 
-from showdown_anal_bot.team_extractor import get_team_from_replays, team2str
-from showdown_anal_bot.gui.sprites import get_path_to_sprite as get_sprite
+from src.showdown_anal_bot.gui.sprites import get_path_to_sprite as get_sprite
 
 # TODO: wait for PySimpleGUIWx to be usable
 # TODO: flesh out the GUI, figure out what to add

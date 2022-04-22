@@ -1,4 +1,5 @@
 import gzip
+import pathlib
 
 import showdown as sd
 
