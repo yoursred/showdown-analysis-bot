@@ -165,6 +165,17 @@ def get_teams(replay_id):
             item = line.split('|')[-1]
             user = line.split(': ')[1].split('|')[0]
             p2_pokes[p2_nicks[user]].setdefault('item', item)
+        if line.startswith('|-start|p1') and '|Dynamax|' in line:
+            user = line.split('|')[2].split(': ')[1]
+            p1_pokes[p1_nicks[user]]['dynamax'] = True
+            if 'Gmax' in line:
+                p1_pokes[p1_nicks[user]]['gmax'] = True
+        if line.startswith('|-start|p2') and '|Dynamax|' in line:
+            user = line.split('|')[2].split(': ')[1]
+            p2_pokes[p2_nicks[user]]['dynamax'] = True
+            if 'Gmax' in line:
+                p2_pokes[p2_nicks[user]]['gmax'] = True
+
 
     return p1_pokes, p2_pokes
 
@@ -261,6 +272,7 @@ def team2str(team, th, ltm):
 
         teamstr += f"@ {poke.get('item', 'Unknown')}, "
         teamstr += f"Ability: {poke.get('ability', 'Unknown')}"
+        teamstr += ', G' if poke.get('gmax') else (', X' if poke.get('dynamax') else '')
         teamstr += f"\n {nick} moves: [ "
         for move in poke.get('moves', ()):
             teamstr += f"{move}, "
