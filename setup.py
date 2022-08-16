@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="showdown-anal-bot",
-    version="0.0.1a",  # PyPi shenanigans
+    version="0.0.2",  # PyPi shenanigans
     author="yoursred",
     author_email="yoursred@yoursred.com",
     description="Pokemon Showdown analysis tools",
