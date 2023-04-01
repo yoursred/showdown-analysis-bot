@@ -1,5 +1,5 @@
 login.txt
 battles/
-src/showdown_anal_bot/gui/sprites/
-src/showdown_anal_bot.egg-info
+src/showdown_analysis_bot/gui/sprites/
+src/showdown_analysis_bot.egg-info
 dist/

@@ -4,16 +4,16 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="showdown-anal-bot",
+    name="showdown-analysis-bot",
     version="0.0.2",  # PyPi shenanigans
     author="yoursred",
     author_email="yoursred@yoursred.com",
     description="Pokemon Showdown analysis tools",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yoursred/showdown-anal-bot",
+    url="https://github.com/yoursred/showdown-analysis-bot",
     project_urls={
-        "Bug Tracker": "https://github.com/yoursred/showdown-anal-bot/issues",
+        "Bug Tracker": "https://github.com/yoursred/showdown-analysis-bot/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
